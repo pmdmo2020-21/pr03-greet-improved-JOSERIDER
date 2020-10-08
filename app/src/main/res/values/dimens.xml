@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="main_margin">16dp</dimen>
+    <dimen name="main_inner_margin">8dp</dimen>
+    <dimen name="img_treatment_size">24dp</dimen>
+    <dimen name="prBar_height">4dp</dimen>
 </resources>

@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Greet Improved</string>
+    <string name="swtch_premium">Premium</string>
+    <string name="lbl_name">Name</string>
+    <string name="edt_name_hint">(name)</string>
+    <string name="lbl_sirname">Sirname</string>
+    <string name="edt_sirname_hint">(sirname)</string>
+    <string name="lbl_treatment">Treatment</string>
+    <string name="img_treatment_description">Treatment image</string>
+    <string name="rdb_mr">Mr.</string>
+    <string name="rdb_mrs">Mrs.</string>
+    <string name="rdb_ms">Ms.</string>
+    <string name="btn_greet">Greet</string>
+    <string name="chk_politely">Politely</string>
+    <string name="lbl_count_greet">%1$d of %2$d</string>
+
+    <!-- messages -->
+    <string name="lbl_greet_politely">Good morning %1$s %2$s %3$s.\n Pleased to meet you</string>
+    <string name="lbl_greet_no_politely">"Hello %1$s %2$s. What's up ? "</string>
+    <string name="message_buy_premium">Buy premium subcription to go on greeting!!</string>
+    <string name="edt_error_required">required</string>
+
+    <!-- Plurals -->
+    <plurals name="characters_left">
+        <item quantity="one">%d char</item>
+        <item quantity="other">%d chars</item>
+    </plurals>
 </resources>

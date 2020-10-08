@@ -1,10 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/llRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/main_margin"
+    tools:context=".MainActivity">
 
-    <!-- TODO -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_premium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:text="@string/swtch_premium" />
 
+    <TextView
+        android:id="@+id/lbl_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_name" />
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/edt_name_hint"
+        android:importantForAutofill="no"
+        android:inputType="textCapWords"
+        android:maxLength="@integer/edt_maxLines">
+
+        <requestFocus />
+    </EditText>
+
+
+    <TextView
+        android:id="@+id/lbl_chars_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        tools:text="20 chars" />
+
+    <TextView
+        android:id="@+id/lbl_sirname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/main_inner_margin"
+        android:text="@string/lbl_sirname" />
+
+    <EditText
+        android:id="@+id/edt_sirname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/edt_sirname_hint"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="textCapWords"
+        android:maxLength="@integer/edt_maxLines" />
+
+    <TextView
+        android:id="@+id/lbl_chars_sirname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        tools:text="20 chars" />
+
+
+    <TextView
+        android:id="@+id/lbl_treatment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/main_inner_margin"
+        android:text="@string/lbl_treatment" />
+
+    <RadioGroup
+        android:id="@+id/rdg_treatment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_treatment"
+            android:layout_width="@dimen/img_treatment_size"
+            android:layout_height="@dimen/img_treatment_size"
+            android:layout_gravity="center"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="@string/img_treatment_description"
+            tools:src="@drawable/ic_mr" />
+
+        <RadioButton
+            android:id="@+id/rdb_mr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rdb_mr" />
+
+        <RadioButton
+            android:id="@+id/rdb_mrs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rdb_mrs" />
+
+        <RadioButton
+            android:id="@+id/rdb_ms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rdb_ms" />
+
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/chk_politely"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/main_inner_margin"
+        android:text="@string/chk_politely" />
+
+    <Button
+        android:id="@+id/btn_greet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/btn_greet" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/prBar_greet"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/prBar_height"
+        android:layout_marginVertical="@dimen/main_inner_margin" />
+
+    <TextView
+        android:id="@+id/lbl_count_greet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        tools:text="1 of 10" />
 </LinearLayout>
