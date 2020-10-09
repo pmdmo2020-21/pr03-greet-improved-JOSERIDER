@@ -35,7 +35,7 @@
 
 
     <TextView
-        android:id="@+id/lbl_chars_name"
+        android:id="@+id/lbl_charsLeft_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -59,7 +59,7 @@
         android:maxLength="@integer/edt_maxLines" />
 
     <TextView
-        android:id="@+id/lbl_chars_sirname"
+        android:id="@+id/lbl_charsLeft_sirname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -90,6 +90,7 @@
 
         <RadioButton
             android:id="@+id/rdb_mr"
+            android:checked="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rdb_mr" />
@@ -108,7 +109,7 @@
 
     </RadioGroup>
 
-    <CheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/chk_politely"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -122,9 +123,10 @@
         android:layout_gravity="center"
         android:text="@string/btn_greet" />
 
-    <androidx.core.widget.ContentLoadingProgressBar
+    <ProgressBar
         android:id="@+id/prBar_greet"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:max="@integer/max_greets"
         android:layout_width="match_parent"
         android:layout_height="@dimen/prBar_height"
         android:layout_marginVertical="@dimen/main_inner_margin" />

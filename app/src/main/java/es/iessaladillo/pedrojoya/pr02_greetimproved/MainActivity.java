@@ -4,23 +4,25 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import es.iessaladillo.pedrojoya.pr02_greetimproved.databinding.MainActivityBinding;
 import es.iessaladillo.pedrojoya.pr02_greetimproved.utils.SoftInputUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int MAX_GREET = 10;
     private MainActivityBinding binding;
     private int countGreet = 0;
-    private RadioButton currentTreatment;
     private boolean isPremium = false;
+
+    private RadioButton currentTreatment;
     private TextWatcher edtNameTextWatcher;
     private TextWatcher edtSirnameTextWatcher;
 
@@ -32,23 +34,20 @@ public class MainActivity extends AppCompatActivity {
         setupViews();
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
-        binding.edtName.setOnFocusChangeListener((v, isFocussed) -> setCharsLeftColor(isFocussed, binding.lblCharsName));
-        binding.edtSirname.setOnFocusChangeListener((v, isFocussed) -> setCharsLeftColor(isFocussed, binding.lblCharsSirname));
-        setupTextWatcherListeners();
+        binding.edtName.setOnFocusChangeListener((v, isFocussed) -> setCharsLeftColor(isFocussed, binding.lblCharsLeftName));
+        binding.edtSirname.setOnFocusChangeListener((v, isFocussed) -> setCharsLeftColor(isFocussed, binding.lblCharsLeftSirname));
+        binding.switchPremium.setOnCheckedChangeListener((compoundButton, b) -> setProgressVisibility(b));
+        binding.rdgTreatment.setOnCheckedChangeListener((radioGroup, i) -> setTreatment(radioGroup));
+        addTextWatcherListeners();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //Remove listener association with EditText's.
-        binding.edtName.setOnFocusChangeListener(null);
-        binding.edtSirname.setOnFocusChangeListener(null);
-        binding.edtName.removeTextChangedListener(edtNameTextWatcher);
-        binding.edtSirname.removeTextChangedListener(edtSirnameTextWatcher);
+        removeListenersAssociation();
     }
 
     private void setupViews() {
@@ -59,15 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupListeners() {
         binding.btnGreet.setOnClickListener(v -> greet());
-        binding.switchPremium.setOnCheckedChangeListener((compoundButton, b) -> setProgressVisibility(b));
-        binding.rdgTreatment.setOnCheckedChangeListener((radioGroup, i) -> setTreatment(radioGroup));
         binding.edtSirname.setOnEditorActionListener((v, actionId, event) -> {
             greet();
             return true;
         });
     }
 
-    private void setupTextWatcherListeners() {
+    private void addTextWatcherListeners() {
         edtNameTextWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -79,13 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (isNotBlankOrEmpty(editable.toString())) {
-                    binding.edtName.setError(null);
-                    int charactersLeft = getResources().getInteger(R.integer.edt_maxLines) - editable.length();
-                    binding.lblCharsName.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLeft, charactersLeft));
-                } else {
-                    binding.edtName.setError(getString(R.string.edt_error_required));
-                }
+                validateAndShowCharsLeft(editable.toString(), binding.edtName, binding.lblCharsLeftName);
             }
         };
         edtSirnameTextWatcher = new TextWatcher() {
@@ -99,13 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (isNotBlankOrEmpty(editable.toString())) {
-                    binding.edtSirname.setError(null);
-                    int charactersLeft = getResources().getInteger(R.integer.edt_maxLines) - editable.length();
-                    binding.lblCharsSirname.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLeft, charactersLeft));
-                } else {
-                    binding.edtSirname.setError(getString(R.string.edt_error_required));
-                }
+                validateAndShowCharsLeft(editable.toString(), binding.edtSirname, binding.lblCharsLeftSirname);
             }
         };
 
@@ -113,20 +98,37 @@ public class MainActivity extends AppCompatActivity {
         binding.edtSirname.addTextChangedListener(edtSirnameTextWatcher);
     }
 
-    private void setDefaults() {
-        binding.prBarGreet.setMax(MAX_GREET);
-        binding.rdgTreatment.check(R.id.rdb_mr);
-
-        setCharsLeftColor(true, binding.lblCharsName);
-        int charactersLef = getResources().getInteger(R.integer.edt_maxLines);
-        binding.lblCharsName.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLef, charactersLef));
-        binding.lblCharsSirname.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLef, charactersLef));
+    private void validateAndShowCharsLeft(String str, EditText edtText, TextView lbl) {
+        if (isNotBlankOrEmpty(str)) {
+            edtText.setError(null);
+            int charactersLeft = getResources().getInteger(R.integer.edt_maxLines) - str.length();
+            lbl.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLeft, charactersLeft));
+        } else {
+            edtText.setError(getString(R.string.edt_error_required));
+        }
     }
 
+    private void removeListenersAssociation() {
+        binding.edtName.setOnFocusChangeListener(null);
+        binding.edtSirname.setOnFocusChangeListener(null);
+
+        binding.rdgTreatment.setOnCheckedChangeListener(null);
+        binding.switchPremium.setOnCheckedChangeListener(null);
+        binding.edtName.removeTextChangedListener(edtNameTextWatcher);
+        binding.edtSirname.removeTextChangedListener(edtSirnameTextWatcher);
+    }
+
+    private void setDefaults() {
+        int charactersLef = getResources().getInteger(R.integer.edt_maxLines);
+        binding.lblCharsLeftName.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLef, charactersLef));
+        binding.lblCharsLeftSirname.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLef, charactersLef));
+        setCharsLeftColor(true, binding.lblCharsLeftName);
+        setTreatment(binding.rdgTreatment);
+    }
 
     private void showProgress() {
         binding.prBarGreet.setProgress(countGreet);
-        binding.lblCountGreet.setText(getString(R.string.lbl_count_greet, countGreet, MAX_GREET));
+        binding.lblCountGreet.setText(getString(R.string.lbl_count_greet, countGreet, getResources().getInteger(R.integer.max_greets)));
     }
 
     private void setProgressVisibility(boolean isChecked) {
@@ -163,10 +165,10 @@ public class MainActivity extends AppCompatActivity {
         String sirname = binding.edtSirname.getText().toString();
 
         if (isValidForm(name, sirname)) {
-
+            int maxGreets = getResources().getInteger(R.integer.max_greets);
             SoftInputUtils.hideSoftKeyboard(binding.edtSirname);
 
-            if (countGreet >= MAX_GREET) {
+            if (countGreet >= maxGreets) {
                 showMessage(getString(R.string.message_buy_premium));
                 return;
             }
@@ -181,6 +183,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isValidForm(String name, String sirname) {
+        return isNotBlankOrEmpty(name) && isNotBlankOrEmpty(sirname);
+    }
+
+    private void showGreet(String name, String sirname) {
+        String treatment = currentTreatment.getText().toString();
+        showMessage(binding.chkPolitely.isChecked() ? getString(R.string.lbl_greet_politely, treatment, name, sirname) : getString(R.string.lbl_greet_no_politely, name, sirname));
+    }
+
     private void showErrors() {
         if (isBlankOrEmpty(binding.edtName.getText().toString())) {
             binding.edtName.setError(getString(R.string.edt_error_required));
@@ -191,27 +202,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showGreet(String name, String sirname) {
-        String treatment = currentTreatment.getText().toString();
-        showMessage(binding.chkPolitely.isChecked() ?
-                getString(R.string.lbl_greet_politely, treatment, name, sirname) : getString(R.string.lbl_greet_no_politely, name, sirname));
-    }
-
-    private boolean isValidForm(String name, String sirname) {
-        return isNotBlankOrEmpty(name) && isNotBlankOrEmpty(sirname);
-    }
-
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-
-    private void setCharsLeftColor(boolean isFocussed, TextView p) {
-        if (isFocussed) {
-            p.setTextColor(getResources().getColor(R.color.colorAccent));
-        } else {
-            p.setTextColor(getResources().getColor(R.color.textPrimary));
-        }
+    private void setCharsLeftColor(boolean isFocussed, TextView lbl) {
+        lbl.setTextColor(ContextCompat.getColor(this, isFocussed ? R.color.colorAccent : R.color.textPrimary));
     }
 
     /**
@@ -225,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Check if the string is valid ( it is  empty and it start with blank spaces and it  end with blank spaces).
+     * Check if the string is valid ( it is empty and it start with blank spaces and it end with blank spaces).
      *
      * @param str string to check if it is valid.
      * @return true if the string is valid or false if the string is not valid.
