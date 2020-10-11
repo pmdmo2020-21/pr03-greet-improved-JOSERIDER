@@ -65,47 +65,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addTextWatcherListeners() {
-        edtNameTextWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                validateAndShowCharsLeft(editable.toString(), binding.edtName, binding.lblCharsLeftName);
-            }
-        };
-        edtSirnameTextWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                validateAndShowCharsLeft(editable.toString(), binding.edtSirname, binding.lblCharsLeftSirname);
-            }
-        };
+        edtNameTextWatcher = getTextWatcherInstance(binding.edtName, binding.lblCharsLeftName);
+        edtSirnameTextWatcher = getTextWatcherInstance(binding.edtSirname, binding.lblCharsLeftSirname);
 
         binding.edtName.addTextChangedListener(edtNameTextWatcher);
         binding.edtSirname.addTextChangedListener(edtSirnameTextWatcher);
-    }
-
-    private void validateAndShowCharsLeft(String str, EditText edtText, TextView lbl) {
-        if (isNotBlankOrEmpty(str)) {
-            edtText.setError(null);
-            int charactersLeft = getResources().getInteger(R.integer.edt_maxLines) - str.length();
-            lbl.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLeft, charactersLeft));
-        } else {
-            edtText.setError(getString(R.string.edt_error_required));
-        }
     }
 
     private void removeListenersAssociation() {
@@ -208,6 +172,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void setCharsLeftColor(boolean isFocussed, TextView lbl) {
         lbl.setTextColor(ContextCompat.getColor(this, isFocussed ? R.color.colorAccent : R.color.textPrimary));
+    }
+
+    private TextWatcher getTextWatcherInstance(EditText editText, TextView lbl) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                //Each editText change, the text is validate and show reamining characters in textView.
+                validateAndShowCharsLeft(editable.toString(), editText, lbl);
+            }
+        };
+    }
+
+    private void validateAndShowCharsLeft(String str, EditText edtText, TextView lbl) {
+        if (isNotBlankOrEmpty(str)) {
+            edtText.setError(null);
+            int charactersLeft = getResources().getInteger(R.integer.edt_maxLines) - str.length();
+            lbl.setText(getResources().getQuantityString(R.plurals.characters_left, charactersLeft, charactersLeft));
+        } else {
+            edtText.setError(getString(R.string.edt_error_required));
+        }
     }
 
     /**
